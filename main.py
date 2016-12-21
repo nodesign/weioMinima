@@ -1,8 +1,6 @@
 from weioLib import weioControl
 from weioLib.weio import *
 
-w = weioControl.WeioControl()
-
 def myProc():
     print("hello world")
     
@@ -18,4 +16,6 @@ def myProc():
 
 attach.process(myProc)
 
+
+w = weioControl.WeioControl()
 w.start()
