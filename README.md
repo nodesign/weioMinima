@@ -1,4 +1,8 @@
-WeIO - Minimal interface for electronics
-========================================
+# WeIO Minima
 
-![Alt text](http://we-io.net/img/weioBack.jpg "WeIO Board")
+Minimal WeIO Platform
+
+## Install
+
+## License 
+[BSD](https://opensource.org/licenses/BSD-3-Clause)
