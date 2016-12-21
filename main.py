@@ -1,7 +1,6 @@
-from weioLib import weioControl
 from weioLib.weio import *
 
-def myProc():
+def main():
     print("hello world")
     
     for a in range(3):
@@ -12,10 +11,3 @@ def myProc():
         digitalWrite(18,LOW)
         print("l")
         delay(1000)
-    w.stop()
-
-attach.process(myProc)
-
-
-w = weioControl.WeioControl()
-w.start()
