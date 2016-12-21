@@ -20,31 +20,39 @@
 #
 ###
 
-import weioRunnerGlobals
-import weioParser
-import weioUserApi
-import weioIO
-import weioGpio
+from weioLib import weioRunnerGlobals, weioParser, weioUserApi, weioIO, weioGpio
 
 import threading
 import signal
+
+# User main
+import main
+
+import subprocess
 
 class WeioControl(object):
     ###
     # Connect to UPER
     ###
     def __init__(self):
+        # User main PID
+        self.proc = None
+
+    ###
+    # Connect to UPER
+    ###
+    def init(self):
         # Install signal handlers
         signal.signal(signal.SIGTERM, self.stop)
         signal.signal(signal.SIGINT, self.stop)
-        print("enetering")
+
         # Init GPIO object for uper communication
-        try:
-            print "Initializing LPC co-processor GPIO interface"
-            weioIO.gpio = weioGpio.WeioGpio()
-        except:
-            print "LPC coprocessor is not present"
-            weioIO.gpio = None
+        if (weioRunnerGlobals.WEIO_SERIAL_LINKED == False):
+            try:
+                weioIO.gpio = weioGpio.WeioGpio()
+            except:
+                print "LPC coprocessor is not present"
+                weioIO.gpio = None
 
     ###
     # Load user module and start threads
@@ -57,14 +65,11 @@ class WeioControl(object):
                     weioUserApi.attach.events[key].handler)
 
         # Launching threads
-        for key in weioUserApi.attach.procs:
-            print key
-            t = threading.Thread(target=weioUserApi.attach.procs[key].procFnc,
-                        args=weioUserApi.attach.procs[key].procArgs)
-            t.daemon = True
-            t.start()
+        t = threading.Thread(target=main.main)
+        t.daemon = True
+        t.start()
 
-            weioRunnerGlobals.WEIO_SERIAL_LINKED = True
+        weioRunnerGlobals.WEIO_SERIAL_LINKED = True
 
     ###
     # execute()
@@ -85,6 +90,7 @@ class WeioControl(object):
     ###
     def stop(self):
         print("closing process")
+        self.proc.terminate()
         if (weioIO.gpio != None):
             if (weioRunnerGlobals.WEIO_SERIAL_LINKED == True):
                 weioIO.gpio.stopReader()
