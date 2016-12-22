@@ -22,7 +22,6 @@
 
 from weioLib import weioRunnerGlobals, weioParser, weioUserApi, weioIO, weioGpio
 
-import threading
 import signal
 
 # User main
@@ -36,7 +35,7 @@ class WeioControl(object):
     ###
     def __init__(self):
         # User main PID
-        self.proc = None
+        self.proc = -1
 
     ###
     # Connect to UPER
@@ -64,11 +63,8 @@ class WeioControl(object):
             weioParser.addUserEvent(weioUserApi.attach.events[key].event,
                     weioUserApi.attach.events[key].handler)
 
-        # Launching threads
-        t = threading.Thread(target=main.main)
-        t.daemon = True
-        t.start()
-
+        # Launching subprocess
+        self.proc = subprocess.Popen(["python", "main.py"])
         weioRunnerGlobals.WEIO_SERIAL_LINKED = True
 
     ###
@@ -90,7 +86,8 @@ class WeioControl(object):
     ###
     def stop(self):
         print("closing process")
-        self.proc.terminate()
+        if (self.proc == None):
+            self.proc.terminate()
         if (weioIO.gpio != None):
             if (weioRunnerGlobals.WEIO_SERIAL_LINKED == True):
                 weioIO.gpio.stopReader()

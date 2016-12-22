@@ -1,6 +1,8 @@
+import sys
 from weioLib.weio import *
 
-def main():
+
+def main(args):
     print("hello world")
     
     for a in range(3):
@@ -12,3 +14,6 @@ def main():
         print("l")
         delay(1000)
 
+if __name__ == '__main__':
+    import sys
+    main(sys.argv[1:])
