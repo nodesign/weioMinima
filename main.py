@@ -1,7 +1,6 @@
 import sys
 from weioLib.weio import *
 
-
 def main(args):
     print("hello world")
     

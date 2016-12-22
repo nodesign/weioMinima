@@ -35,7 +35,7 @@ class WeioControl(object):
     ###
     def __init__(self):
         # User main PID
-        self.proc = -1
+        self.proc = None
 
     ###
     # Connect to UPER
@@ -86,7 +86,7 @@ class WeioControl(object):
     ###
     def stop(self):
         print("closing process")
-        if (self.proc == None):
+        if (self.proc.poll() == None):
             self.proc.terminate()
         if (weioIO.gpio != None):
             if (weioRunnerGlobals.WEIO_SERIAL_LINKED == True):
